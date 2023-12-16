@@ -7,7 +7,7 @@ module.exports = {
           team_name: 'Atlético-GO',
         },
         {
-          team_name: 'Atlético-MG"',
+          team_name: 'Atlético-MG',
         },
         {
           team_name: 'Athletico-PR',
