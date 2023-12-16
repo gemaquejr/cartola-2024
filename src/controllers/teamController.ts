@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
+import TeamService from '../services/teamService';
 import Team from '../database/models/Team';
 
-const TeamController = {
-  
+class TeamController {
+  constructor(private teamService = new TeamService()) {}
+
   async getAllTeams(_req: Request, res: Response) {
     try {
-      const teams = await Team.findAll();
+      const teams = await this.teamService.getAllTeams();
       res.status(200).json(teams);
     } catch (error) {
       res.status(500).json({ error: 'Error when searching for teams'})
     }
-  },
+  }
 
   async createTeam(req: Request, res: Response) {
     const { teamName } = req.body;
@@ -20,19 +22,26 @@ const TeamController = {
         return res.status(400).json({ error: 'Team name is mandatory' });
       }
 
-      const newTeam = await Team.create({ teamName });
+      const existingTeam = await Team.findOne({ where: { teamName } });      
+      if (existingTeam) {
+        throw new Error('Team with this name already exists');
+      }
+      
+      const newTeam = await this.teamService.createTeam(teamName);
       res.status(201).json(newTeam);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error.message === 'Team with this name already exists') {
+        return res.status(400).json({ error: error.message });
+      }
       res.status(500).json({ error: 'Error when creating a new team' });
     }
-  },
+  }
   
   async getTeamById(req: Request, res: Response) {
     const { id } = req.params;
 
     try {
-      const team = await Team.findByPk(id);
+      const team = await this.teamService.getTeamById(Number(id));
       if (!team) {
         return res.status(404).json({ message: 'Team not found' });
       }
@@ -40,37 +49,37 @@ const TeamController = {
     } catch (error) {
       res.status(500).json({ error: 'Error when searching for team by ID'})
     }
-  },
+  }
 
   async updateTeam(req: Request, res: Response) {
     const { id } = req.params;
     const { teamName } = req.body;
-
+    
     try {
-      const [updated] = await Team.update({ teamName }, { where: { id } });
-      if (updated === 0) {
-        return res.status(404).json({ message: 'Team not found' });
+      const updated = await this.teamService.updateTeam(Number(id), { teamName });
+      if (!updated) {
+        return res.status(404).json({ message: 'Team not update' });
       }
-      const teamUpdated = await Team.findByPk(id);
-      res.status(200).json(teamUpdated);
+      return res.status(200).json(updated);
     } catch (error) {
       res.status(500).json({ error: 'Error when updating team' });
     }
-  },
+  }
 
   async deleteTeam(req: Request, res: Response) {
     const { id } = req.params;
 
     try {
-      const deleted = await Team.destroy({ where: { id } });
-      if (deleted === 0) {
+      const team = await this.teamService.getTeamById(Number(id));      
+      if (!team) {
         return res.status(404).json({ message: 'Team not found' });
       }
-      res.status(204).send();
+      await this.teamService.deleteTeam(Number(id))
+      return res.status(204).json({ ok: true });
     } catch (error) {
-      res.status(500).json({ error: 'Error when deleting team' });
+      return res.status(500).json({ error: 'Error when deleting team' });
     }
-  },
+  }
 }
   
 export default TeamController;
