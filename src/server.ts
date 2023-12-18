@@ -3,6 +3,7 @@ import 'dotenv/config';
 import db from './db'
 
 import teamRouter from './routes/teamRoute';
+import playerRouter from './routes/playerRoute';
 
 const PORT = 3001
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.get('/', (_req, res) => res.status(200).json({ message: 'API funcionando!' }));
 app.use('/teams', teamRouter);
+app.use('/players', playerRouter);
 
 db.sync().then(() => {
     console.log('Banco de dados conectado');
