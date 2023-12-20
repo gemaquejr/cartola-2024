@@ -18,12 +18,12 @@ class PlayerController {
   async createPlayer(req: Request, res: Response) {
     const { position, name, punctuation, price, appreciation, teamId } = req.body;
 
-    try {     
+    try {
       if (!name || !teamId) {
         return res.status(400).json({ error: 'Name and team ID are mandatory' });
       }
 
-      const teamExists = await Team.findOne(teamId);      
+      const teamExists = await Team.findByPk(teamId);      
       if (!teamExists) {
         return res.status(404).json({ error: 'Team not found' });
       }
@@ -40,8 +40,8 @@ class PlayerController {
       const newPlayer = await this.playerService.createPlayer(playerData);
       res.status(201).json({ newPlayer });
     } catch (error: any) {
-      if (error.message === 'Player with this name already exists') {
-        return res.status(400).json({ error: error.message });
+      if (error.message.includes('Player with this name already exists in this team')) {
+        return res.status(400).json({ error: 'Player with this name already exists in this team' });
       }
       res.status(500).json({ error: 'Error when creating a new player' });
     }

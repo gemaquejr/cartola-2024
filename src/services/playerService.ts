@@ -13,7 +13,13 @@ export default class TeamService {
   }
     
   public async createPlayer(playerData: {position: string, name: string, punctuation: number, price: number, appreciation: number, teamId: number}) { 
-    try {     
+    try {
+      const { name, teamId } = playerData;
+
+      const existingPlayer = await this.playerModel.findOne({ where: { name, teamId } });
+      if (existingPlayer) {
+        throw new Error('Player with this name already exists in this team');
+      }
       const newPlayer = await this.playerModel.create(playerData);
       return newPlayer;
     } catch (error) {
