@@ -12,9 +12,9 @@ export default class TeamService {
     }
   }
     
-  public async createPlayer(name: string) { 
-    try {
-      const newPlayer = await this.playerModel.create({ name });
+  public async createPlayer(playerData: {position: string, name: string, punctuation: number, price: number, appreciation: number, teamId: number}) { 
+    try {     
+      const newPlayer = await this.playerModel.create(playerData);
       return newPlayer;
     } catch (error) {
       throw new Error(`Error when creating player: ${error}`);
@@ -30,14 +30,14 @@ export default class TeamService {
     }
   }
     
-  public async updatePlayer(id: number, name: { [playerField: string]: any }) {    
+  public async updatePlayer(id: number, playerData: { [playerField: string]: any }) {    
     try {
       const playerToUpdate = await this.playerModel.findByPk(id);
       if (!playerToUpdate) {
         throw new Error('Player not found');
       }
       
-      const updatedPlayer = await playerToUpdate.update(name);
+      const updatedPlayer = await playerToUpdate.update(playerData);
       return updatedPlayer;
     } catch (error) {
       throw new Error(`Error when updating player: ${error}`);
