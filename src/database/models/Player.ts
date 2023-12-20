@@ -10,6 +10,7 @@ class Player extends Model {
     public punctuation!: number;
     public price!: number;
     public appreciation!: number;
+    public teamId!: number;
   
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -42,10 +43,21 @@ Player.init ({
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    teamId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        field: 'team_id',
+        references: {
+          model: 'teams',
+          key: 'id',
+        },
+      },
 }, {
     underscored: true,
     sequelize: db,
-    modelName: 'player',
+    modelName: 'players',
     timestamps: false,
 });
 
