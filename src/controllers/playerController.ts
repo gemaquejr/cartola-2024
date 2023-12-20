@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import PlayerService from '../services/playerService';
-import Player from '../database/models/Player';
+
+import Team from '../database/models/Team';
 
 class PlayerController {
   constructor(private playerService = new PlayerService()) {}
@@ -15,20 +16,29 @@ class PlayerController {
   }
 
   async createPlayer(req: Request, res: Response) {
-    const { name } = req.body;
+    const { position, name, punctuation, price, appreciation, teamId } = req.body;
 
-    try {
-      if (!name) {
-        return res.status(400).json({ error: 'Name is mandatory' });
+    try {     
+      if (!name || !teamId) {
+        return res.status(400).json({ error: 'Name and team ID are mandatory' });
       }
 
-      const existingPlayer = await Player.findOne({ where: { name } });      
-      if (existingPlayer) {
-        throw new Error('Player with this name already exists');
+      const teamExists = await Team.findOne(teamId);      
+      if (!teamExists) {
+        return res.status(404).json({ error: 'Team not found' });
       }
+
+      const playerData = {
+        position,
+        name,
+        punctuation,
+        price,
+        appreciation,
+        teamId,
+      };
       
-      const newPlayer = await this.playerService.createPlayer(name);
-      res.status(201).json(newPlayer);
+      const newPlayer = await this.playerService.createPlayer(playerData);
+      res.status(201).json({ newPlayer });
     } catch (error: any) {
       if (error.message === 'Player with this name already exists') {
         return res.status(400).json({ error: error.message });
@@ -53,10 +63,10 @@ class PlayerController {
 
   async updatePlayer(req: Request, res: Response) {
     const { id } = req.params;
-    const { name } = req.body;
+    const playerData = req.body;
     
     try {
-      const updated = await this.playerService.updatePlayer(Number(id), { name });
+      const updated = await this.playerService.updatePlayer(Number(id), playerData);
       if (!updated) {
         return res.status(404).json({ message: 'Player not update' });
       }
@@ -70,8 +80,8 @@ class PlayerController {
     const { id } = req.params;
 
     try {
-      const team = await this.playerService.getPlayerById(Number(id));      
-      if (!team) {
+      const player = await this.playerService.getPlayerById(Number(id));      
+      if (!player) {
         return res.status(404).json({ message: 'Player not found' });
       }
       await this.playerService.deletePlayer(Number(id))
