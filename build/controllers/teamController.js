@@ -12,19 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const teamService_1 = __importDefault(require("../services/teamService"));
 const Team_1 = __importDefault(require("../database/models/Team"));
-const TeamController = {
+class TeamController {
+    constructor(teamService = new teamService_1.default()) {
+        this.teamService = teamService;
+    }
     getAllTeams(_req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const teams = yield Team_1.default.findAll();
+                const teams = yield this.teamService.getAllTeams();
                 res.status(200).json(teams);
             }
             catch (error) {
                 res.status(500).json({ error: 'Error when searching for teams' });
             }
         });
-    },
+    }
     createTeam(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { teamName } = req.body;
@@ -32,20 +36,26 @@ const TeamController = {
                 if (!teamName) {
                     return res.status(400).json({ error: 'Team name is mandatory' });
                 }
-                const newTeam = yield Team_1.default.create({ teamName });
+                const existingTeam = yield Team_1.default.findOne({ where: { teamName } });
+                if (existingTeam) {
+                    throw new Error('Team with this name already exists');
+                }
+                const newTeam = yield this.teamService.createTeam(teamName);
                 res.status(201).json(newTeam);
             }
             catch (error) {
-                console.error(error);
+                if (error.message === 'Team with this name already exists') {
+                    return res.status(400).json({ error: error.message });
+                }
                 res.status(500).json({ error: 'Error when creating a new team' });
             }
         });
-    },
+    }
     getTeamById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                const team = yield Team_1.default.findByPk(id);
+                const team = yield this.teamService.getTeamById(Number(id));
                 if (!team) {
                     return res.status(404).json({ message: 'Team not found' });
                 }
@@ -55,39 +65,39 @@ const TeamController = {
                 res.status(500).json({ error: 'Error when searching for team by ID' });
             }
         });
-    },
+    }
     updateTeam(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             const { teamName } = req.body;
             try {
-                const [updated] = yield Team_1.default.update({ teamName }, { where: { id } });
-                if (updated === 0) {
-                    return res.status(404).json({ message: 'Team not found' });
+                const updated = yield this.teamService.updateTeam(Number(id), { teamName });
+                if (!updated) {
+                    return res.status(404).json({ message: 'Team not update' });
                 }
-                const teamUpdated = yield Team_1.default.findByPk(id);
-                res.status(200).json(teamUpdated);
+                return res.status(200).json(updated);
             }
             catch (error) {
                 res.status(500).json({ error: 'Error when updating team' });
             }
         });
-    },
+    }
     deleteTeam(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                const deleted = yield Team_1.default.destroy({ where: { id } });
-                if (deleted === 0) {
+                const team = yield this.teamService.getTeamById(Number(id));
+                if (!team) {
                     return res.status(404).json({ message: 'Team not found' });
                 }
-                res.status(204).send();
+                yield this.teamService.deleteTeam(Number(id));
+                return res.status(204).json({ ok: true });
             }
             catch (error) {
-                res.status(500).json({ error: 'Error when deleting team' });
+                return res.status(500).json({ error: 'Error when deleting team' });
             }
         });
-    },
-};
+    }
+}
 exports.default = TeamController;
 //# sourceMappingURL=teamController.js.map
