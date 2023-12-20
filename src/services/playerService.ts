@@ -1,11 +1,14 @@
 import Player from '../database/models/Player';
+import Team from '../database/models/Team';
 
 export default class TeamService {
   public playerModel = Player;
 
   public async getAllPlayers() {
     try {
-      const players = await this.playerModel.findAll();
+      const players = await this.playerModel.findAll({
+        include: { model: Team, attributes: ['teamName'] }
+      });
       return players;
     } catch (error) {
       throw new Error(`Error when searching for ${error}`);
