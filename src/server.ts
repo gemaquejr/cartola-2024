@@ -5,6 +5,9 @@ import db from './db'
 import teamRouter from './routes/teamRoute';
 import playerRouter from './routes/playerRoute';
 import matchRouter from './routes/matchRoute';
+import leaderboardRouter from './routes/leaderboardRoute';
+
+
 
 const PORT = 3001
 
@@ -16,6 +19,7 @@ app.get('/', (_req, res) => res.status(200).json({ message: 'API funcionando!' }
 app.use('/teams', teamRouter);
 app.use('/players', playerRouter);
 app.use('/matches', matchRouter);
+app.use('/leaderboard', leaderboardRouter);
 
 db.sync().then(() => {
     console.log('Banco de dados conectado');
