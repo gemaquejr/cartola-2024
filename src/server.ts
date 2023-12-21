@@ -4,6 +4,7 @@ import db from './db'
 
 import teamRouter from './routes/teamRoute';
 import playerRouter from './routes/playerRoute';
+import matchRouter from './routes/matchRoute';
 
 const PORT = 3001
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.get('/', (_req, res) => res.status(200).json({ message: 'API funcionando!' }));
 app.use('/teams', teamRouter);
 app.use('/players', playerRouter);
+app.use('/matches', matchRouter);
 
 db.sync().then(() => {
     console.log('Banco de dados conectado');
