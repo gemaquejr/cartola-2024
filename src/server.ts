@@ -6,8 +6,7 @@ import teamRouter from './routes/teamRoute';
 import playerRouter from './routes/playerRoute';
 import matchRouter from './routes/matchRoute';
 import leaderboardRouter from './routes/leaderboardRoute';
-
-
+import coachRouter from './routes/coachRoute'
 
 const PORT = 3001
 
@@ -20,6 +19,7 @@ app.use('/teams', teamRouter);
 app.use('/players', playerRouter);
 app.use('/matches', matchRouter);
 app.use('/leaderboard', leaderboardRouter);
+app.use('/coaches', coachRouter);
 
 db.sync().then(() => {
     console.log('Banco de dados conectado');
