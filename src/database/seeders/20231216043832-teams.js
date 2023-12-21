@@ -4,13 +4,13 @@ module.exports = {
       'teams',
       [
         {
+          team_name: 'Athletico-PR',
+        },
+        {
           team_name: 'Atlético-GO',
         },
         {
           team_name: 'Atlético-MG',
-        },
-        {
-          team_name: 'Athletico-PR',
         },
         {
           team_name: 'Bahia',
