@@ -3,24 +3,22 @@ import PropTypes from 'prop-types';
 
 const GamerFilter = ({ currentFilter, setCurrentFilter }) => {
   const handleCurrentFilter = () => {
-    const selectedFilter = document.getElementById('classification-filter').value;
+    const selectedFilter = document.getElementById('classification_filter').value;
     setCurrentFilter(selectedFilter);
   };
 
   return (
     <form>
-      <label htmlFor="classification-filter">
+      <label htmlFor="classification_filter">
         Partidas:
         <select
-          id="classification-filter"
+          id="classification_filter"
           defaultValue={ currentFilter }
-          data-testid="score_boarding__classification_filter"
         >
           <option>Classificação Geral</option>
         </select>
       </label>
       <button
-        data-testid="score_boarding__classification_filter_button"
         type="button"
         onClick={ () => handleCurrentFilter() }
       >
