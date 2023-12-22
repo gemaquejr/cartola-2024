@@ -6,33 +6,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_1 = __importDefault(require("../../db"));
 const Team_1 = __importDefault(require("./Team"));
-class Player extends sequelize_1.Model {
+class Coach extends sequelize_1.Model {
 }
-Player.init({
+Coach.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    position: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-    },
     name: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
-    punctuation: {
-        type: sequelize_1.DataTypes.FLOAT,
+    nacionality: {
+        type: sequelize_1.DataTypes.NUMBER,
         allowNull: false,
     },
-    price: {
-        type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-    },
-    appreciation: {
-        type: sequelize_1.DataTypes.FLOAT,
+    age: {
+        type: sequelize_1.DataTypes.NUMBER,
         allowNull: false,
     },
     teamId: {
@@ -49,9 +41,9 @@ Player.init({
 }, {
     underscored: true,
     sequelize: db_1.default,
-    modelName: 'players',
+    modelName: 'coaches',
     timestamps: false,
 });
-Player.belongsTo(Team_1.default, { foreignKey: 'teamId' });
-exports.default = Player;
-//# sourceMappingURL=Player.js.map
+Coach.belongsTo(Team_1.default, { foreignKey: 'teamId' });
+exports.default = Coach;
+//# sourceMappingURL=Coach.js.map

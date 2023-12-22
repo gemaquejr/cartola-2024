@@ -6,52 +6,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const db_1 = __importDefault(require("../../db"));
 const Team_1 = __importDefault(require("./Team"));
-class Player extends sequelize_1.Model {
+class Match extends sequelize_1.Model {
 }
-Player.init({
+Match.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
     },
-    position: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-    },
-    name: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-    },
-    punctuation: {
-        type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-    },
-    price: {
-        type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-    },
-    appreciation: {
-        type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-    },
-    teamId: {
+    homeTeam: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false,
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        field: 'team_id',
         references: {
             model: 'teams',
             key: 'id',
         },
     },
+    homeTeamGoals: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+    },
+    awayTeam: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'teams',
+            key: 'id',
+        },
+    },
+    awayTeamGoals: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+    },
+    inProgress: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+    },
 }, {
     underscored: true,
     sequelize: db_1.default,
-    modelName: 'players',
+    modelName: 'matches',
     timestamps: false,
 });
-Player.belongsTo(Team_1.default, { foreignKey: 'teamId' });
-exports.default = Player;
-//# sourceMappingURL=Player.js.map
+Match.belongsTo(Team_1.default, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team_1.default, { foreignKey: 'awayTeam', as: 'teamAway' });
+exports.default = Match;
+//# sourceMappingURL=Match.js.map

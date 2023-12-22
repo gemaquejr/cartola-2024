@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __importDefault(require("../database/models/Player"));
+const Team_1 = __importDefault(require("../database/models/Team"));
 class TeamService {
     constructor() {
         this.playerModel = Player_1.default;
@@ -20,11 +21,12 @@ class TeamService {
     getAllPlayers() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const players = yield this.playerModel.findAll();
+                const players = yield this.playerModel.findAll({
+                    include: { model: Team_1.default, attributes: ['teamName'] }
+                });
                 return players;
             }
             catch (error) {
-                console.error('Error when searching for players:', error);
                 throw new Error(`Error when searching for ${error}`);
             }
         });
@@ -32,7 +34,11 @@ class TeamService {
     createPlayer(playerData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log('Dados recebidos no serviço:', playerData);
+                const { name, teamId } = playerData;
+                const existingPlayer = yield this.playerModel.findOne({ where: { name, teamId } });
+                if (existingPlayer) {
+                    throw new Error('Player with this name already exists in this team');
+                }
                 const newPlayer = yield this.playerModel.create(playerData);
                 return newPlayer;
             }
@@ -52,14 +58,14 @@ class TeamService {
             }
         });
     }
-    updatePlayer(id, name) {
+    updatePlayer(id, playerData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const playerToUpdate = yield this.playerModel.findByPk(id);
                 if (!playerToUpdate) {
                     throw new Error('Player not found');
                 }
-                const updatedPlayer = yield playerToUpdate.update(name);
+                const updatedPlayer = yield playerToUpdate.update(playerData);
                 return updatedPlayer;
             }
             catch (error) {

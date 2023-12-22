@@ -15,7 +15,7 @@ class TeamController {
   }
 
   async createTeam(req: Request, res: Response) {
-    const { teamName, stadiumName, teamLogoURL } = req.body;
+    const { teamName, stadiumName, teamLogo } = req.body;
 
     try {
       if (!teamName) {
@@ -30,11 +30,11 @@ class TeamController {
       const teamData = {
         teamName,
         stadiumName,
-        teamLogoURL,
+        teamLogo,
       };
       
       const newTeam = await this.teamService.createTeam(teamData);
-      res.status(201).json({ newTeam });
+      res.status(201).json(newTeam);
     } catch (error: any) {
       if (error.message === 'Team with this name already exists') {
         return res.status(400).json({ error: error.message });

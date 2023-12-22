@@ -18,6 +18,14 @@ Team.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
+    stadiumName: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+    },
+    teamLogo: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     underscored: true,
     sequelize: db_1.default,

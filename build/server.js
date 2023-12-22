@@ -8,12 +8,18 @@ require("dotenv/config");
 const db_1 = __importDefault(require("./db"));
 const teamRoute_1 = __importDefault(require("./routes/teamRoute"));
 const playerRoute_1 = __importDefault(require("./routes/playerRoute"));
+const matchRoute_1 = __importDefault(require("./routes/matchRoute"));
+const leaderboardRoute_1 = __importDefault(require("./routes/leaderboardRoute"));
+const coachRoute_1 = __importDefault(require("./routes/coachRoute"));
 const PORT = 3001;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.get('/', (_req, res) => res.status(200).json({ message: 'API funcionando!' }));
 app.use('/teams', teamRoute_1.default);
 app.use('/players', playerRoute_1.default);
+app.use('/matches', matchRoute_1.default);
+app.use('/leaderboard', leaderboardRoute_1.default);
+app.use('/coaches', coachRoute_1.default);
 db_1.default.sync().then(() => {
     console.log('Banco de dados conectado');
 }).catch((error) => {

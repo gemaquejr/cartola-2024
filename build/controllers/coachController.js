@@ -12,26 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const playerService_1 = __importDefault(require("../services/playerService"));
+const coachService_1 = __importDefault(require("../services/coachService"));
 const Team_1 = __importDefault(require("../database/models/Team"));
-class PlayerController {
-    constructor(playerService = new playerService_1.default()) {
-        this.playerService = playerService;
+class CoachController {
+    constructor(coachService = new coachService_1.default()) {
+        this.coachService = coachService;
     }
-    getAllPlayers(_req, res) {
+    getAllCoaches(_req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const players = yield this.playerService.getAllPlayers();
-                res.status(200).json(players);
+                const coaches = yield this.coachService.getAllCoaches();
+                res.status(200).json(coaches);
             }
             catch (error) {
-                res.status(500).json({ error: 'Error when searching for players' });
+                res.status(500).json({ error: 'Error when searching for coaches' });
             }
         });
     }
-    createPlayer(req, res) {
+    createCoach(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { position, name, punctuation, price, appreciation, teamId } = req.body;
+            const { name, nacionality, age, teamId } = req.body;
             try {
                 if (!name || !teamId) {
                     return res.status(400).json({ error: 'Name and team ID are mandatory' });
@@ -40,72 +40,70 @@ class PlayerController {
                 if (!teamExists) {
                     return res.status(404).json({ error: 'Team not found' });
                 }
-                const playerData = {
-                    position,
+                const coachData = {
                     name,
-                    punctuation,
-                    price,
-                    appreciation,
+                    nacionality,
+                    age,
                     teamId,
                 };
-                const newPlayer = yield this.playerService.createPlayer(playerData);
-                res.status(201).json({ newPlayer });
+                const newCoach = yield this.coachService.createCoach(coachData);
+                res.status(201).json({ newCoach });
             }
             catch (error) {
-                if (error.message.includes('Player with this name already exists in this team')) {
-                    return res.status(400).json({ error: 'Player with this name already exists in this team' });
+                if (error.message.includes('Coach with this name already exists in this team')) {
+                    return res.status(400).json({ error: 'Coach with this name already exists in this team' });
                 }
-                res.status(500).json({ error: 'Error when creating a new player' });
+                res.status(500).json({ error: 'Error when creating a new coach' });
             }
         });
     }
-    getPlayerById(req, res) {
+    getCoachById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                const player = yield this.playerService.getPlayerById(Number(id));
-                if (!player) {
-                    return res.status(404).json({ message: 'Player not found' });
+                const coach = yield this.coachService.getCoachById(Number(id));
+                if (!coach) {
+                    return res.status(404).json({ message: 'Coach not found' });
                 }
-                res.status(200).json(player);
+                res.status(200).json(coach);
             }
             catch (error) {
-                res.status(500).json({ error: 'Error when searching for player by ID' });
+                res.status(500).json({ error: 'Error when searching for coach by ID' });
             }
         });
     }
-    updatePlayer(req, res) {
+    updateCoach(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const playerData = req.body;
+            const coachData = req.body;
             try {
-                const updated = yield this.playerService.updatePlayer(Number(id), playerData);
+                const updated = yield this.coachService.updateCoach(Number(id), coachData);
                 if (!updated) {
-                    return res.status(404).json({ message: 'Player not update' });
+                    return res.status(404).json({ message: 'Coach not update' });
                 }
                 return res.status(200).json(updated);
             }
             catch (error) {
-                res.status(500).json({ error: 'Error when updating player' });
+                res.status(500).json({ error: 'Error when updating coach' });
             }
         });
     }
-    deletePlayer(req, res) {
+    deleteCoach(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                const player = yield this.playerService.getPlayerById(Number(id));
-                if (!player) {
-                    return res.status(404).json({ message: 'Player not found' });
+                const coach = yield this.coachService.getCoachById(Number(id));
+                if (!coach) {
+                    return res.status(404).json({ message: 'Coach not found' });
                 }
-                yield this.playerService.deletePlayer(Number(id));
+                yield this.coachService.deleteCoach(Number(id));
                 return res.status(204).json({ ok: true });
             }
             catch (error) {
-                return res.status(500).json({ error: 'Error when deleting player' });
+                return res.status(500).json({ error: 'Error when deleting coach' });
             }
         });
     }
 }
-exports.default = PlayerController;
-//# sourceMappingURL=playerController.js.map
+exports.default = CoachController;
+//# sourceMappingURL=coachController.js.map

@@ -5,7 +5,7 @@ class Team extends Model {
     public id!: number;
     public teamName!: string;
     public stadiumName!: string;
-    public teamLogoURL!: string;
+    public teamLogo!: string;
   
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -26,7 +26,7 @@ Team.init ({
         type: DataTypes.STRING,
         allowNull: true,
       },
-      teamLogoURL: {
+      teamLogo: {
         type: DataTypes.STRING,
         allowNull: true,
       },

@@ -12,74 +12,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const Coach_1 = __importDefault(require("../database/models/Coach"));
 const Team_1 = __importDefault(require("../database/models/Team"));
-class TeamService {
+class CoachService {
     constructor() {
-        this.teamModel = Team_1.default;
+        this.coachModel = Coach_1.default;
     }
-    getAllTeams() {
+    getAllCoaches() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const teams = yield this.teamModel.findAll();
-                return teams;
+                const coaches = yield this.coachModel.findAll({
+                    include: { model: Team_1.default, attributes: ['teamName'] }
+                });
+                return coaches;
             }
             catch (error) {
                 throw new Error(`Error when searching for ${error}`);
             }
         });
     }
-    createTeam(teamData) {
+    createCoach(coachData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newTeam = yield this.teamModel.create(teamData);
-                return newTeam;
+                const { name, teamId } = coachData;
+                const existingCoach = yield this.coachModel.findOne({ where: { name, teamId } });
+                if (existingCoach) {
+                    throw new Error('Coach with this name already exists in this team');
+                }
+                const newCoach = yield this.coachModel.create(coachData);
+                return newCoach;
             }
             catch (error) {
-                throw new Error(`Error when creating team: ${error}`);
+                throw new Error(`Error when creating coach: ${error}`);
             }
         });
     }
-    getTeamById(id) {
+    getCoachById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const team = yield this.teamModel.findByPk(id);
+                const team = yield this.coachModel.findByPk(id);
                 return team;
             }
             catch (error) {
-                throw new Error(`Error when searching for team: ${error}`);
+                throw new Error(`Error when searching for coach: ${error}`);
             }
         });
     }
-    updateTeam(id, teamData) {
+    updateCoach(id, coachData) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const teamToUpdate = yield this.teamModel.findByPk(id);
-                if (!teamToUpdate) {
-                    throw new Error('Team not found');
+                const coachToUpdate = yield this.coachModel.findByPk(id);
+                if (!coachToUpdate) {
+                    throw new Error('Coach not found');
                 }
-                const updatedTeam = yield teamToUpdate.update(teamData);
-                return updatedTeam;
+                const updatedCoach = yield coachToUpdate.update(coachData);
+                return updatedCoach;
             }
             catch (error) {
-                throw new Error(`Error when updating team: ${error}`);
+                throw new Error(`Error when updating coach: ${error}`);
             }
         });
     }
-    deleteTeam(id) {
+    deleteCoach(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const team = yield this.teamModel.findByPk(id);
-                if (!team) {
-                    throw new Error('Team not found');
+                const coach = yield this.coachModel.findByPk(id);
+                if (!coach) {
+                    throw new Error('Coach not found');
                 }
-                yield team.destroy();
-                return { message: 'Team deleted successfully' };
+                yield coach.destroy();
+                return { message: 'Coach deleted successfully' };
             }
             catch (error) {
-                throw new Error(`Error when deleting team: ${error}`);
+                throw new Error(`Error when deleting coach: ${error}`);
             }
         });
     }
 }
-exports.default = TeamService;
-//# sourceMappingURL=teamService.js.map
+exports.default = CoachService;
+//# sourceMappingURL=coachService.js.map

@@ -19,10 +19,10 @@ module.exports = {
         allowNull: false,
         field: 'stadium_name',
        },
-       team_Logo_URL: {
+       team_logo: {
         type: Sequelize.STRING,
         allowNull: false,
-        field: 'team_logo_url',
+        field: 'team_logo',
        },
     });  
   },

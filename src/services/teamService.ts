@@ -12,9 +12,9 @@ export default class TeamService {
     }
   }
     
-  public async createTeam(teamData: {teamName: string, stadiumName: string, teamLogoURL: string}) { 
+  public async createTeam(teamData: {teamName: string, stadiumName: string, teamLogo: string}) { 
     try {
-      const newTeam = await this.teamModel.create({ teamData });
+      const newTeam = await this.teamModel.create(teamData);
       return newTeam;
     } catch (error) {
       throw new Error(`Error when creating team: ${error}`);

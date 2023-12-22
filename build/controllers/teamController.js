@@ -31,7 +31,7 @@ class TeamController {
     }
     createTeam(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { teamName } = req.body;
+            const { teamName, stadiumName, teamLogo } = req.body;
             try {
                 if (!teamName) {
                     return res.status(400).json({ error: 'Team name is mandatory' });
@@ -40,7 +40,12 @@ class TeamController {
                 if (existingTeam) {
                     throw new Error('Team with this name already exists');
                 }
-                const newTeam = yield this.teamService.createTeam(teamName);
+                const teamData = {
+                    teamName,
+                    stadiumName,
+                    teamLogo,
+                };
+                const newTeam = yield this.teamService.createTeam(teamData);
                 res.status(201).json(newTeam);
             }
             catch (error) {
@@ -69,9 +74,9 @@ class TeamController {
     updateTeam(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { teamName } = req.body;
+            const teamData = req.body;
             try {
-                const updated = yield this.teamService.updateTeam(Number(id), { teamName });
+                const updated = yield this.teamService.updateTeam(Number(id), teamData);
                 if (!updated) {
                     return res.status(404).json({ message: 'Team not update' });
                 }
