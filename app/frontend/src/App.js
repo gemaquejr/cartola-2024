@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import React from 'react';
 
 import './App.css'
-import Leaderboard from './pages/Leaderboard';
+import Leaderboard from './pages/Leaderboard/Leaderboard';
 
 function App() {
   return (
