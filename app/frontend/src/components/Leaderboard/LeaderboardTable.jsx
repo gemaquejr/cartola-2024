@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { requestData } from '../services/requests';
-import Loading from './Loading';
+import { requestData } from '../../services/requests';
+import Loading from '../Loading';
 import { v4 as uuidv4 } from 'uuid';
+import styles from './LeaderboardTable.module.css';
 
 const LeaderboardTable = ({ currentFilter }) => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -33,21 +34,21 @@ const LeaderboardTable = ({ currentFilter }) => {
   }
 
   return (
-    <section className="score-board-table-section">
-      <table className="score-board-table">
+    <section className={styles.score_board_table_section}>
+      <table className={styles.score_board_table}>
         <thead>
           <tr>
-            <th data-testid="score_boarding__classification">Classificação</th>
-            <th data-testid="score_boarding__team_name">Time</th>
-            <th data-testid="score_boarding__total_points">P</th>
-            <th data-testid="score_boarding__total_games">J</th>
-            <th data-testid="score_boarding__total_victories">V</th>
-            <th data-testid="score_boarding__total_draws">E</th>
-            <th data-testid="score_boarding__total_looses">D</th>
-            <th data-testid="score_boarding__goals_favor">GP</th>
-            <th data-testid="score_boarding__goals_own">GC</th>
-            <th data-testid="score_boarding__goals_balance">SG</th>
-            <th data-testid="score_boarding__efficiency">%</th>
+            <th>Classificação</th>
+            <th>Time</th>
+            <th>P</th>
+            <th>J</th>
+            <th>V</th>
+            <th>E</th>
+            <th>D</th>
+            <th>GP</th>
+            <th>GC</th>
+            <th>SG</th>
+            <th>%</th>
           </tr>
         </thead>
         <tbody>
@@ -67,68 +68,57 @@ const LeaderboardTable = ({ currentFilter }) => {
             index) => (
               <tr key={ uuidv4() }>
                 <td
-                  className="score-board-classification"
-                  data-testid={ `score_boarding__classification_${index + 1}` }
+                  className={styles.score_board_classification}
                 >
                   {`${index + 1}`}
                 </td>
                 <td
-                  className="score-board-team-name"
-                  data-testid={ `score_boarding__team_name_${index + 1}` }
+                  className={styles.score_board_team_name}
                 >
                   {name}
                 </td>
                 <td
-                  className="score-board-total-points"
-                  data-testid={ `score_boarding__total_points_${index + 1}` }
+                  className={styles.score_board_total_points}
                 >
                   { totalPoints }
                 </td>
                 <td
-                  className="score-board-total-games"
-                  data-testid={ `score_boarding__total_games_${index + 1}` }
+                  className={styles.score_board_total_games}
                 >
                   { totalGames }
                 </td>
                 <td
-                  className="score-board-total-victories"
-                  data-testid={ `score_boarding__total_victories_${index + 1}` }
+                  className={styles.score_board_total_victories}
                 >
                   { totalVictories }
                 </td>
                 <td
-                  className="score-board-total-draws"
-                  data-testid={ `score_boarding__total_draws_${index + 1}` }
+                  className={styles.score_board_total_draws}
                 >
                   { totalDraws }
                 </td>
                 <td
-                  className="score-board-total-looses"
-                  data-testid={ `score_boarding__total_looses_${index + 1}` }
+                  className={styles.score_board_total_looses}
                 >
                   { totalLosses }
                 </td>
                 <td
-                  className="score-board-goals-favor"
-                  data-testid={ `score_boarding__goals_favor_${index + 1}` }
+                  className={styles.score_board_goals_favor}
                 >
                   { goalsFavor }
                 </td>
                 <td
-                  className="score-board-goals-own"
-                  data-testid={ `score_boarding__goals_own_${index + 1}` }
+                  className={styles.score_board_goals_own}
                 >
                   { goalsOwn }
                 </td>
                 <td
-                  className="score-board-goals-balance"
-                  data-testid={ `score_boarding__goals_balance_${index + 1}` }
+                  className={styles.score_board_goals_balance}
                 >
                   { goalsBalance }
                 </td>
                 <td
-                  className="score-board-efficiency"
-                  data-testid={ `score_boarding__efficiency_${index + 1}` }
+                  className={styles.score_board_efficiency}
                 >
                   { efficiency }
                 </td>
