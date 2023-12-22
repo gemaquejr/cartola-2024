@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LeaderboardTable from '../components/Leaderboard/LeaderboardTable';
-import TableFilter from '../components/TableFilter';
+import LeaderboardTable from '../../components/LeaderboardTable/LeaderboardTable';
+import TableFilter from '../../components/TableFilter';
 
 const Leaderboard = () => {
   const [currentFilter, setCurrentFilter] = useState('Classificação Geral');
