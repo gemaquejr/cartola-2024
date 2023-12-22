@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LeaderboardTable from '../components/LeaderboardTable';
+import LeaderboardTable from '../components/Leaderboard/LeaderboardTable';
 import TableFilter from '../components/TableFilter';
 
 const Leaderboard = () => {
