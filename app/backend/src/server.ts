@@ -9,8 +9,14 @@ import leaderboardRouter from './routes/leaderboardRoute';
 import coachRouter from './routes/coachRoute'
 
 const PORT = 3001
-
 const app = express();
+
+app.use((_req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+});
 
 app.use(express.json());
 
