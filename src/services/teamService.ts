@@ -12,9 +12,9 @@ export default class TeamService {
     }
   }
     
-  public async createTeam(teamName: string) { 
+  public async createTeam(teamData: {teamName: string, stadiumName: string, teamLogoURL: string}) { 
     try {
-      const newTeam = await this.teamModel.create({ teamName });
+      const newTeam = await this.teamModel.create({ teamData });
       return newTeam;
     } catch (error) {
       throw new Error(`Error when creating team: ${error}`);
@@ -30,14 +30,14 @@ export default class TeamService {
     }
   }
     
-  public async updateTeam(id: number, teamName: { [teamField: string]: any }) {    
+  public async updateTeam(id: number, teamData: { [teamField: string]: any }) {    
     try {
       const teamToUpdate = await this.teamModel.findByPk(id);
       if (!teamToUpdate) {
         throw new Error('Team not found');
       }
       
-      const updatedTeam = await teamToUpdate.update(teamName);
+      const updatedTeam = await teamToUpdate.update(teamData);
       return updatedTeam;
     } catch (error) {
       throw new Error(`Error when updating team: ${error}`);

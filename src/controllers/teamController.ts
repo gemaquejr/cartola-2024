@@ -15,7 +15,7 @@ class TeamController {
   }
 
   async createTeam(req: Request, res: Response) {
-    const { teamName } = req.body;
+    const { teamName, stadiumName, teamLogoURL } = req.body;
 
     try {
       if (!teamName) {
@@ -26,9 +26,15 @@ class TeamController {
       if (existingTeam) {
         throw new Error('Team with this name already exists');
       }
+
+      const teamData = {
+        teamName,
+        stadiumName,
+        teamLogoURL,
+      };
       
-      const newTeam = await this.teamService.createTeam(teamName);
-      res.status(201).json(newTeam);
+      const newTeam = await this.teamService.createTeam(teamData);
+      res.status(201).json({ newTeam });
     } catch (error: any) {
       if (error.message === 'Team with this name already exists') {
         return res.status(400).json({ error: error.message });
@@ -53,10 +59,10 @@ class TeamController {
 
   async updateTeam(req: Request, res: Response) {
     const { id } = req.params;
-    const { teamName } = req.body;
+    const teamData = req.body;
     
     try {
-      const updated = await this.teamService.updateTeam(Number(id), { teamName });
+      const updated = await this.teamService.updateTeam(Number(id), teamData);
       if (!updated) {
         return res.status(404).json({ message: 'Team not update' });
       }
